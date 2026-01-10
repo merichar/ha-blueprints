@@ -4,13 +4,15 @@ Blueprints for Inovelli Blue Series devices (VZM30-SN, VZM31-SN, and VZM35-SN) u
 
 ## Inovelli Blue: Unified Switch Control (`inovelli_vzm_sn_smart_remote.yaml`)
 
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Finovelli%2Fblue-series%2Finovelli_vzm_sn_smart_remote.yaml)
+
 This blueprint provides a unified interface for cycling scenes and managing dimming levels. It treats the physical switch as a remote controller for smart bulbs or smart fans.
 
 ### Operation
 * Button 2 (Up) Single Press: Cycles through the Scene Tracker helper. If the target entity is currently off, it resets to the first scene in the list.
-* Button 2 (Up) Hold: Increases brightness of the target entity (active lights only) in 10% increments until released.
+* Button 2 (Up) Hold: Increases brightness of the target entity in 10% increments until released.
 * Button 1 (Down) Single Press: Turns off the target entity.
-* Button 1 (Down) Hold: Decreases brightness of the target entity (active lights only) in 10% increments until released.
+* Button 1 (Down) Hold: Decreases brightness of the target entity in 10% increments until released.
 
 ### Prerequisites
 * Smart Bulb Mode: The switch must have Smart Bulb Mode enabled.
