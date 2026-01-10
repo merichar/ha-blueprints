@@ -55,7 +55,6 @@ action:
             value_template: "{{ trigger.event.data.command == 'button_2_press' }}"
         sequence:
           - choose:
-              # Reset to first scene if light is off OR it has been X seconds since last interaction
               - conditions:
                   - condition: template
                     value_template: >
@@ -67,7 +66,6 @@ action:
                   - service: input_select.select_first
                     target:
                       entity_id: !input scene_helper
-              # Note: default is NOT a list item. It is a key of the choose block.
             default:
               - service: input_select.select_next
                 target:
@@ -90,12 +88,13 @@ action:
                   target: !input target_entity
                   data:
                     brightness_step_pct: 10
-                - wait_for_event:
-                    event_type: zha_event
-                    event_data:
-                      device_id: !input switch_device
-                      command: button_2_release
-                    timeout: "00:00:01"
+                - wait_for_trigger:
+                    - platform: event
+                      event_type: zha_event
+                      event_data:
+                        device_id: !input switch_device
+                        command: button_2_release
+                  timeout: "00:00:01"
                 - condition: template
                   value_template: "{{ wait.trigger == none }}"
 
@@ -121,12 +120,13 @@ action:
                   target: !input target_entity
                   data:
                     brightness_step_pct: -10
-                - wait_for_event:
-                    event_type: zha_event
-                    event_data:
-                      device_id: !input switch_device
-                      command: button_1_release
-                    timeout: "00:00:01"
+                - wait_for_trigger:
+                    - platform: event
+                      event_type: zha_event
+                      event_data:
+                        device_id: !input switch_device
+                        command: button_1_release
+                  timeout: "00:00:01"
                 - condition: template
                   value_template: "{{ wait.trigger == none }}"
 mode: restart
