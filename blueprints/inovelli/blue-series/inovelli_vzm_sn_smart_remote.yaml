@@ -42,7 +42,7 @@ trigger:
       device_id: !input switch_device
 
 action:
-  - vars:
+  - variables:
       helper: !input scene_helper
       prefix: !input area_prefix
       target: !input target_entity
@@ -94,7 +94,8 @@ action:
                       event_data:
                         device_id: !input switch_device
                         command: button_2_release
-                  timeout: "00:00:01"
+                  timeout:
+                    seconds: 1
                 - condition: template
                   value_template: "{{ wait.trigger == none }}"
 
@@ -126,7 +127,8 @@ action:
                       event_data:
                         device_id: !input switch_device
                         command: button_1_release
-                  timeout: "00:00:01"
+                  timeout:
+                    seconds: 1
                 - condition: template
                   value_template: "{{ wait.trigger == none }}"
 mode: restart
