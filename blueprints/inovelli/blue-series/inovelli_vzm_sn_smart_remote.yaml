@@ -1,6 +1,6 @@
 blueprint:
   name: "Inovelli Blue: Unified Switch Control"
-  description: "Advanced scene cycling and dimming for VZM30-SN, VZM31-SN, or VZM35-SN in Smart Bulb Mode."
+  description: "Advanced scene cycling and dimming. Resets to the first scene if the switch is unused for a set duration or if the target is off."
   domain: automation
   input:
     switch_device:
@@ -25,6 +25,15 @@ blueprint:
       name: Area Prefix
       description: "The prefix for your scene IDs (e.g., 'living_room')."
       default: ""
+    reset_timeout:
+      name: Reset Timeout
+      description: "Seconds of inactivity before the next press starts at the first scene."
+      default: 300
+      selector:
+        number:
+          min: 1
+          max: 3600
+          unit_of_measurement: seconds
 
 trigger:
   - platform: event
@@ -37,6 +46,7 @@ action:
       helper: !input scene_helper
       prefix: !input area_prefix
       target: !input target_entity
+      timeout_seconds: !input reset_timeout
 
   - choose:
       # UP BUTTON: PRESS
@@ -45,15 +55,19 @@ action:
             value_template: "{{ trigger.event.data.command == 'button_2_press' }}"
         sequence:
           - choose:
+              # Reset to first scene if light is off OR it has been X seconds since last interaction
               - conditions:
                   - condition: template
                     value_template: >
                       {% set ent_id = target.entity_id if target.entity_id is string else target.entity_id[0] %}
-                      {{ is_state(ent_id, 'off') }}
+                      {% set last_triggered = state_attr(this.entity_id, 'last_triggered') %}
+                      {% set inactive = (now() - last_triggered).total_seconds() > timeout_seconds if last_triggered else true %}
+                      {{ is_state(ent_id, 'off') or inactive }}
                 sequence:
                   - service: input_select.select_first
                     target:
                       entity_id: !input scene_helper
+              # Else move to next scene
               default:
                 - service: input_select.select_next
                   target:
