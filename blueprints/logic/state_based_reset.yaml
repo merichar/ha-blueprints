@@ -1,0 +1,37 @@
+blueprint:
+  name: "Logic: State-Based Scene Reset"
+  description: "Resets a Scene Tracker helper when a light is turned off. Supports Alexa and App-based control."
+  domain: automation
+  input:
+    light_target:
+      name: Light Entity
+      selector:
+        entity:
+          domain: light
+    scene_helper:
+      name: Scene Tracker Helper
+      selector:
+        entity:
+          domain: input_select
+    delay_seconds:
+      name: Reset Delay
+      default: 5
+      selector:
+        number:
+          min: 0
+          max: 60
+          unit_of_measurement: seconds
+
+trigger:
+  - platform: state
+    entity_id: !input light_target
+    to: "off"
+    for:
+      seconds: !input delay_seconds
+
+action:
+  - service: input_select.select_first
+    target:
+      entity_id: !input scene_helper
+
+mode: restart

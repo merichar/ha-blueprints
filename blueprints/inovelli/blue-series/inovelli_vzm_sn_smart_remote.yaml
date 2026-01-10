@@ -1,0 +1,118 @@
+blueprint:
+  name: "Inovelli Blue: Unified Switch Control"
+  description: "Advanced scene cycling and dimming for VZM30-SN, VZM31-SN, or VZM35-SN in Smart Bulb Mode."
+  domain: automation
+  input:
+    switch_device:
+      name: Inovelli Switch
+      selector:
+        device:
+          filter:
+            - integration: zha
+            - manufacturer: Inovelli
+    target_entity:
+      name: Target Entity
+      description: The light group or fan to control.
+      selector:
+        target: {}
+    scene_helper:
+      name: Scene Tracker Helper
+      description: The Dropdown (input_select) for this room's scenes.
+      selector:
+        entity:
+          domain: input_select
+    area_prefix:
+      name: Area Prefix
+      description: "The prefix for your scene IDs (e.g., 'living_room')."
+      default: ""
+
+trigger:
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: !input switch_device
+
+action:
+  - vars:
+      helper: !input scene_helper
+      prefix: !input area_prefix
+      target: !input target_entity
+
+  - choose:
+      # UP BUTTON: PRESS
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.event.data.command == 'button_2_press' }}"
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: >
+                      {% set ent_id = target.entity_id if target.entity_id is string else target.entity_id[0] %}
+                      {{ is_state(ent_id, 'off') }}
+                sequence:
+                  - service: input_select.select_first
+                    target:
+                      entity_id: !input scene_helper
+              default:
+                - service: input_select.select_next
+                  target:
+                    entity_id: !input scene_helper
+          - service: scene.turn_on
+            target:
+              entity_id: "scene.{{ prefix }}_{{ states(helper) | lower | replace(' ', '_') }}"
+
+      # UP BUTTON: HOLD
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.event.data.command == 'button_2_hold' }}"
+        sequence:
+          - repeat:
+              while:
+                - condition: template
+                  value_template: "{{ repeat.index < 20 }}"
+              sequence:
+                - service: light.turn_on
+                  target: !input target_entity
+                  data:
+                    brightness_step_pct: 10
+                - wait_for_event:
+                    event_type: zha_event
+                    event_data:
+                      device_id: !input switch_device
+                      command: button_2_release
+                    timeout: "00:00:01"
+                - condition: template
+                  value_template: "{{ wait.trigger == none }}"
+
+      # DOWN BUTTON: PRESS
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.event.data.command == 'button_1_press' }}"
+        sequence:
+          - service: light.turn_off
+            target: !input target_entity
+
+      # DOWN BUTTON: HOLD
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.event.data.command == 'button_1_hold' }}"
+        sequence:
+          - repeat:
+              while:
+                - condition: template
+                  value_template: "{{ repeat.index < 20 }}"
+              sequence:
+                - service: light.turn_on
+                  target: !input target_entity
+                  data:
+                    brightness_step_pct: -10
+                - wait_for_event:
+                    event_type: zha_event
+                    event_data:
+                      device_id: !input switch_device
+                      command: button_1_release
+                    timeout: "00:00:01"
+                - condition: template
+                  value_template: "{{ wait.trigger == none }}"
+mode: restart
