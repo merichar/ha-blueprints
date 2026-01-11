@@ -109,6 +109,11 @@ action:
           - condition: template
             value_template: "{{ trigger.event.data.command in ['button_1_press', 'off'] }}"
         sequence:
+          # PREVENT LOOP: Only fire off command if target is not already off
+          - condition: template
+            value_template: >
+              {% set ent_id = target.entity_id if target.entity_id is string else target.entity_id[0] %}
+              {{ not is_state(ent_id, 'off') }}
           - service: light.turn_off
             target: !input target_entity
 
@@ -136,4 +141,4 @@ action:
                     seconds: 1
                 - condition: template
                   value_template: "{{ wait.trigger == none }}"
-mode: restart
+mode: single
