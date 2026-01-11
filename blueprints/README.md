@@ -9,6 +9,9 @@ To use these blueprints in your Home Assistant instance, click the buttons below
 ### Inovelli Blue: Unified Switch Control
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Finovelli%2Fblue-series%2Finovelli_vzm_sn_smart_remote.yaml)
 
+### Logic: Humidity-Controlled Fan
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Flogic%2Fhumidity_fan_control.yaml)
+
 ### Manual Installation ###
 
 1. **Copy the File:** Copy the URL of the raw .yaml file you want to use from this repository.
@@ -19,8 +22,8 @@ To use these blueprints in your Home Assistant instance, click the buttons below
 ## Structure Overview
 
 * **inovelli:** Manufacturer-specific blueprints for Inovelli Blue Series switches.
+* **logic:** Hardware-agnostic logic blueprints (e.g., climate, humidity control).
 * **philips-hue:** (Planned) Battery-powered remote controllers.
-* **logic:** (Planned) Hardware-agnostic logic blueprints.
 
 ## The Area-Aware Pattern
 
@@ -37,8 +40,8 @@ Each room requires an input_select (Dropdown) helper.
 * It uses that state to determine which `scene.[area]_[state]` to trigger.
 * Refer to the [Helpers Guide](../helpers/README.md) for setup details.
 
-### 3. Predictability and Resets
-These blueprints include built-in logic to ensure the switch remains predictable. 
-* **State Reset:** If the target entity is off, the next press starts at the first scene.
-* **Time Reset:** If the switch has not been used for a set duration (e.g., 5 minutes), the next press starts at the first scene.
+### 3. Predictability and Resets (Logic & Lighting)
+These blueprints include built-in logic to ensure devices remain predictable.
+* **State Reset:** For lighting, if the target entity is off, the next press starts at the first scene.
+* **Hysteresis & Safety:** For logic blueprints (like Humidity Control), triggers use defined offsets and safety timeouts to prevent equipment short-cycling or infinite run-times.
 * This ensures synchronization with voice assistants and apps without requiring extra background automations.

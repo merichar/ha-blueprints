@@ -1,0 +1,70 @@
+blueprint:
+  name: "Logic: Humidity Fan Control with Safety Timer"
+  description: "Turns on a fan when humidity rises and off when it drops. Includes a timeout."
+  domain: automation
+  input:
+    humidity_sensor:
+      name: Humidity Sensor
+      selector:
+        entity:
+          domain: sensor
+          device_class: humidity
+    target_fan:
+      name: Exhaust Fan
+      selector:
+        target:
+          entity:
+            domain: [switch, fan]
+    rising_threshold:
+      name: Activation Threshold
+      default: 70
+      selector:
+        number: { min: 0, max: 100, unit_of_measurement: "%" }
+    falling_threshold:
+      name: Deactivation Threshold
+      default: 60
+      selector:
+        number: { min: 0, max: 100, unit_of_measurement: "%" }
+    max_run_time:
+      name: Safety Timeout (Minutes)
+      description: Force turn off the fan after this many minutes, even if humidity is still high.
+      default: 30
+      selector:
+        number: { min: 1, max: 120, unit_of_measurement: "min" }
+
+trigger:
+  - platform: numeric_state
+    entity_id: !input humidity_sensor
+    above: !input rising_threshold
+    id: "turn_on"
+  - platform: numeric_state
+    entity_id: !input humidity_sensor
+    below: !input falling_threshold
+    id: "turn_off"
+  - platform: state
+    entity_id: !input target_fan
+    to: "on"
+    for:
+      minutes: !input max_run_time
+    id: "timeout"
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: "turn_on"
+        sequence:
+          - service: homeassistant.turn_on
+            target: !input target_fan
+      - conditions:
+          - condition: or
+            conditions:
+              - condition: trigger
+                id: "turn_off"
+              - condition: trigger
+                id: "timeout"
+        sequence:
+          - service: homeassistant.turn_off
+            target: !input target_fan
+
+mode: restart
