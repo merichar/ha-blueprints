@@ -2,9 +2,9 @@
 
 Blueprints for Inovelli Blue Series devices (VZM30-SN, VZM31-SN, and VZM35-SN) using the ZHA integration.
 
-## Inovelli Blue: Unified Switch Control (`inovelli_vzm_sn_smart_remote.yaml`)
+## Inovelli Blue: Unified Switch Control (`inovelli_vzm_sn_smart_lighting_remote.yaml`)
 
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Finovelli%2Fblue-series%2Finovelli_vzm_sn_smart_remote.yaml)
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Finovelli%2Fblue-series%2Finovelli_vzm_sn_smart_lighting_remote.yaml)
 
 This blueprint provides a unified interface for cycling scenes and managing dimming levels. It treats the physical switch as a remote controller for smart bulbs or smart fans. Includes self-contained reset logic based on light state and inactivity.
 
