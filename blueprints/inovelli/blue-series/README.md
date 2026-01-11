@@ -1,6 +1,6 @@
 # Inovelli Blue Series (VZM-SN)
 
-Blueprints for Inovelli Blue Series devices (VZM30-SN, VZM31-SN, and VZM35-SN) using the ZHA integration. Optimized for Smart Bulb Mode.
+Blueprints for Inovelli Blue Series devices (VZM30-SN, VZM31-SN, and VZM35-SN) using the ZHA integration.
 
 ## Inovelli Blue: Unified Switch Control (`inovelli_vzm_sn_smart_remote.yaml`)
 
@@ -15,7 +15,7 @@ This blueprint provides a unified interface for cycling scenes and managing dimm
 * **Button 1 (Down) Hold:** Decreases brightness by 10% increments.
 
 ### Prerequisites
-* **Smart Bulb Mode:** The switch must have Smart Bulb Mode enabled.
+* **Smart Bulb Mode or Local Protection:** The switch must have Smart Bulb Mode or Local Protection enabled.
 * **Scene Tracker Helper:** Requires an `input_select` helper to track rotation. See [Centralized Helper Guide](../../../helpers/README.md) for setup.
 * **Entity Naming:** Scenes must follow the pattern `scene.[area_prefix]_[scene_name]`.
 
