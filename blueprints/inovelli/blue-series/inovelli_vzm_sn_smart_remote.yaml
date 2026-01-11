@@ -55,21 +55,21 @@ action:
             value_template: "{{ trigger.event.data.command == 'button_2_press' }}"
         sequence:
           - choose:
-              - conditions:
-                  - condition: template
-                    value_template: >
-                      {% set ent_id = target.entity_id if target.entity_id is string else target.entity_id[0] %}
-                      {% set last_triggered = state_attr(this.entity_id, 'last_triggered') %}
-                      {% set inactive = (now() - last_triggered).total_seconds() > timeout_seconds if last_triggered else true %}
-                      {{ is_state(ent_id, 'off') or inactive }}
-                sequence:
-                  - service: input_select.select_first
-                    target:
-                      entity_id: !input scene_helper
-              default:
-                - service: input_select.select_next
+            - conditions:
+                - condition: template
+                  value_template: >
+                    {% set ent_id = target.entity_id if target.entity_id is string else target.entity_id[0] %}
+                    {% set last_triggered = state_attr(this.entity_id, 'last_triggered') %}
+                    {% set inactive = (now() - last_triggered).total_seconds() > timeout_seconds if last_triggered else true %}
+                    {{ is_state(ent_id, 'off') or inactive }}
+              sequence:
+                - service: input_select.select_first
                   target:
                     entity_id: !input scene_helper
+            default:
+              - service: input_select.select_next
+                target:
+                  entity_id: !input scene_helper
 
           - service: scene.turn_on
             target:
