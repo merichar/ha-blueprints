@@ -1,6 +1,6 @@
 blueprint:
-  name: "Inovelli Blue: Smart Lighting Remote"
-  description: "Advanced scene cycling and dimming. Resets to the first scene if the switch is unused for a set duration or if the target is off."
+  name: "Inovelli Blue: Scene Control"
+  description: "Scene cycling and dimming control with automatic state-based reset."
   domain: automation
   input:
     switch_device:

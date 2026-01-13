@@ -2,9 +2,9 @@
 
 Blueprints for Inovelli Blue Series devices (VZM30-SN, VZM31-SN, and VZM35-SN) using the ZHA integration.
 
-## Inovelli Blue: Smart Lighting Remote (`inovelli_vzm_sn_smart_lighting_remote.yaml`)
+## Inovelli Blue: Scene Control (`inovelli_vzm_sn_scene_control.yaml`)
 
-[![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Finovelli%2Fblue-series%2Finovelli_vzm_sn_smart_lighting_remote.yaml)
+[![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Finovelli%2Fblue-series%2Finovelli_vzm_sn_scene_control.yaml)
 
 This blueprint provides a unified interface for cycling scenes and managing dimming levels. It treats the physical switch as a remote controller for smart bulbs or smart fans. Includes self-contained reset logic based on light state and inactivity.
 
@@ -13,6 +13,17 @@ This blueprint provides a unified interface for cycling scenes and managing dimm
 * **Button 2 (Up) Hold:** Increases brightness by 10% increments.
 * **Button 1 (Down) Single Press:** Turns off the target entity.
 * **Button 1 (Down) Hold:** Decreases brightness by 10% increments.
+
+### How It Works
+
+**Sequence Tracking**
+The blueprint reads the Scene Tracker helper to determine which scene to activate. Each button press activates the current scene and advances the tracker to the next option in the list.
+
+**State-Based Reset**
+The Scene Tracker automatically resets to the first option when the associated lights turn off. This ensures the first scene always triggers after darkness, regardless of how the lights were turned off (switch, voice assistant, app, or automation). This state-based approach keeps the system synchronized across all control methods without requiring additional background automations.
+
+**Inactivity Reset**
+After the configured Reset Timeout period of no button presses, the next press returns to the first scene. This provides predictable behavior when returning to a room after extended absence.
 
 ### Prerequisites
 * **Smart Bulb Mode or Local Protection:** The switch must have Smart Bulb Mode or Local Protection enabled.
@@ -31,3 +42,4 @@ This blueprint provides a unified interface for cycling scenes and managing dimm
     * Area Prefix: `living_room`
     * Target Entity: `area.living_room`
     * Scene Helper: `input_select.living_room_scene_tracker`
+4. Name your automation: `Living Room: Wall Switch Scene Control`
