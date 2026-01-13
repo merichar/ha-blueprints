@@ -1,51 +1,69 @@
-# Blueprints Library
+# Home Assistant Blueprints
 
-This directory contains Home Assistant Blueprints designed for a standardized, area-aware smart home.
+## Available Blueprints
+
+### [Logic Blueprints](logic/README.md)
+Hardware-agnostic automation blueprints that work with any compatible device.
+
+- **Humidity Fan Control** - Automate fans based on humidity with dual thresholds and a timeout
+- **Random Color Bop** - Random color cycling that updates a subset of lights per iteration for party effects
+
+### [Inovelli Blue Series](inovelli/blue-series/README.md)
+Blueprints for Inovelli Blue Series switches (VZM30-SN, VZM31-SN, VZM35-SN) using the ZHA integration.
+
+- **Scene Control** - Unified interface for cycling scenes and managing dimming with smart bulbs
+
+### Philips Hue (Planned)
+Battery-powered remote controllers.
+
+---
 
 ## Installation
 
-To use these blueprints in your Home Assistant instance, click the buttons below or copy the URL of the .yaml file and paste it into the Home Assistant Blueprint import page.
+### Import via Home Assistant
+Each blueprint's README includes an import badge. Click the category links above for detailed documentation.
 
-### Inovelli Blue: Smart Lighting Remote
-[![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Finovelli%2Fblue-series%2Finovelli_vzm_sn_smart_lighting_remote.yaml)
-
-### Logic: Humidity-Controlled Fan
-[![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Flogic%2Fhumidity_fan_control.yaml)
-
-### Logic: Disco Lighting Mode
-[![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Flogic%2Fdisco_mode.yaml)
-
-### Manual Installation ###
-
-1. **Copy the File:** Copy the URL of the raw .yaml file you want to use from this repository.
-2. **Import:** In Home Assistant, navigate to Settings > Automations & Scenes > Blueprints.
+### Manual Installation
+1. **Copy the File:** Copy the raw .yaml file URL from this repository.
+2. **Import:** Navigate to Settings > Automations & Scenes > Blueprints in Home Assistant.
 3. **Add:** Click "Import Blueprint" and paste the URL.
-   * Note: You may also manually create the matching directory structure in your local config/blueprints/ folder and save the code directly.
+   * Alternatively, manually create the directory structure in your config/blueprints/ folder and save the file directly.
 
-## Structure Overview
+---
 
-* **inovelli:** Manufacturer-specific blueprints for Inovelli Blue Series switches.
-* **logic:** Hardware-agnostic logic blueprints and reusable scripts (e.g., climate, disco effects).
-* **philips-hue:** (Planned) Battery-powered remote controllers.
+## Naming Conventions & Area-Aware Pattern
 
-## The Area-Aware Pattern
+### Blueprint Naming
+All blueprints follow a consistent naming pattern:
 
-Most blueprints in this repository follow a specific naming convention to simplify room management.
+**`[Category]: [Optional Trigger] [Thing] Control`**
 
-### 1. Naming Scenes
-We use an Area Prefix logic. Scenes should be named using the following format:
-`scene.[area]_[scene_name]`
-e.g.: `scene.living_room_bright`, `scene.living_room_movie`
+**Categories:**
+- **Logic:** Hardware-agnostic automation blueprints
+- **Inovelli Blue:** Inovelli-specific hardware blueprints
+- *Additional hardware categories as needed*
 
-### 2. The Scene Tracker
-Each room requires an input_select (Dropdown) helper.
-* The Blueprint reads the current state of this helper.
-* It uses that state to determine which `scene.[area]_[state]` to trigger.
-* Refer to the [Helpers Guide](../helpers/README.md) for setup details.
+**Components:**
+- **Trigger** (optional): The input or condition that activates the control
+  - Include for Logic blueprints when not obvious from context
+  - Omit for hardware blueprints where implicit (e.g., button press)
+- **Thing**: The target device, system, or mode being controlled
+- **Control**: Standardized suffix
 
-### 3. Predictability and Resets (Logic & Lighting)
-These blueprints include built-in logic to ensure devices remain predictable.
-* **State Reset:** For lighting, if the target entity is off, the next press starts at the first scene.
-* **Hysteresis & Safety:** For logic blueprints (like Humidity Control), triggers use defined offsets and safety timeouts to prevent equipment short-cycling or infinite run-times.
-* **Loop Prevention:** Advanced triggers include state-aware guards to prevent Zigbee broadcast loops on noisy switches.
-* This ensures synchronization with voice assistants and apps without requiring extra background automations.
+**Examples:**
+- `Logic: Humidity Fan Control` - Humidity (trigger) controls Fan
+- `Inovelli Blue: Scene Control` - Button press (implicit) controls Scenes
+
+### Automation Instance Naming
+Automation instances mirror the blueprint structure with a location prefix: `[Location]: [Input/Trigger] [Thing] Control`
+
+**Examples:**
+- `Main Ensuite: Humidity Fan Control`
+- `Living Room: Wall Switch Scene Control`
+
+### Scene Naming
+Scenes use an area prefix for area-aware automation:
+```
+scene.[area]_[scene_name]
+```
+**Examples:** `scene.living_room_bright`, `scene.living_room_movie`
