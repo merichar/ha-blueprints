@@ -41,9 +41,9 @@ This blueprint automates an exhaust fan based on humidity levels. It uses a dual
 
 ## Script Blueprints
 
-### Disco Lighting Mode (`disco_mode.yaml`)
+### Disco Lighting Mode (`random_color_bop.yaml`)
 
-[![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Flogic%2Fdisco_mode.yaml)
+[![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Flogic%2Frandom_color_bop.yaml)
 
 Rapidly cycles every light in selected areas to a unique, 100% saturated random color. Includes high-performance hybrid logic for mixed lighting environments.
 

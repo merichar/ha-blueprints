@@ -1,6 +1,6 @@
 blueprint:
-  name: "Logic: Disco Mode"
-  description: "Rapidly cycles every light in selected areas to a unique, saturated random color."
+  name: "Logic: Random Color Bop"
+  description: "Rapidly cycle random colors by updating a subset of lights per iteration. Creates organic multi-color party lighting effects."
   domain: script
   input:
     target_areas:
