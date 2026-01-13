@@ -1,6 +1,6 @@
 blueprint:
   name: "Logic: Disco Mode"
-  description: "Rapidly cycles every light in selected areas to a unique, 100% saturated random color."
+  description: "Rapidly cycles every light in selected areas to a unique, saturated random color."
   domain: script
   input:
     target_areas:
@@ -27,7 +27,10 @@ blueprint:
 
 sequence:
   - variables:
+      brightness: !input brightness_level
+      delay_secs: !input delay_time
       targets: !input target_areas
+      transition_secs: !input transition_time
       all_entities: >
         {% set entities = area_entities(targets.area_id) if targets.area_id is string else [] %}
         {% if targets.area_id is list %}
@@ -42,19 +45,23 @@ sequence:
         {% endif %}
         {{ entities | select('match', 'light.') | unique | list }}
       color_lights: >
-        {{ all_entities | select('is_state_attr', 'supported_color_modes', 'hs') | list }}
+        {% set filtered = namespace(entities=[]) %}
+        {% for entity in all_entities %}
+          {% set modes = state_attr(entity, 'supported_color_modes') or [] %}
+          {% if 'hs' in modes or 'rgb' in modes or 'xy' in modes or 'color_temp' in modes %}
+            {% set filtered.entities = filtered.entities + [entity] %}
+          {% endif %}
+        {% endfor %}
+        {{ filtered.entities }}
       strobe_lights: >
-        {{ all_entities | reject('is_state_attr', 'supported_color_modes', 'hs') | list }}
-      brightness: !input brightness_level
-      delay_secs: !input delay_time
-      transition_secs: !input transition_time
+        {{ all_entities | reject('in', color_lights) | list }}
 
   - repeat:
       while:
         - condition: template
           value_template: "{{ true }}"
       sequence:
-        # Batch update all color-capable lights
+        # Color Service: Sends HS commands which HA translates to XY for your BR30s
         - if:
             - condition: template
               value_template: "{{ color_lights | count > 0 }}"
@@ -69,7 +76,7 @@ sequence:
                   - 100
                 transition: "{{ transition_secs }}"
         
-        # Batch update all white/non-color lights to "strobe"
+        # Strobe Service: Handles Tetris lamps and non-color entities
         - if:
             - condition: template
               value_template: "{{ strobe_lights | count > 0 }}"
