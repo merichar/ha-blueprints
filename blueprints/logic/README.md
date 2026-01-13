@@ -1,64 +1,72 @@
 # Logic Blueprints
 
-This directory contains hardware-agnostic logic blueprints. Unlike manufacturer-specific blueprints, these are designed to work with any device (Zigbee, Z-Wave, WiFi, or Matter) that provides the required sensor data or entity types.
+Hardware-agnostic automation blueprints that work with any compatible device.
 
 ---
 
 ## Automation Blueprints
 
-### Humidity-Controlled Fan with Safety Timer (`humidity_fan_control.yaml`)
+### Logic: Humidity Fan Control (`humidity_fan_control.yaml`)
 
 [![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Flogic%2Fhumidity_fan_control.yaml)
 
-This blueprint automates an exhaust fan based on humidity levels. It uses a dual-threshold approach to ensure the fan doesn't "stutter" near the trigger point and includes a safety timeout to prevent indefinite run-times.
+Automates a fan based on humidity levels using dual thresholds and a safety timeout. Commonly used for bathroom exhaust fans.
 
 #### Operation
-* **Trigger High:** When the humidity sensor rises above the **Activation Threshold**, the fan turns on.
-* **Trigger Low:** When the humidity sensor drops below the **Deactivation Threshold**, the fan turns off.
-* **Safety Timeout:** If the fan remains on for a continuous period exceeding the **Safety Timeout**, it will force-stop. This prevents excessive wear on the motor during naturally humid days.
+* **High threshold:** Fan turns on when humidity rises above the activation threshold
+* **Low threshold:** Fan turns off when humidity drops below the deactivation threshold
+* **Maximum runtime:** Forces fan off after continuous run-time limit to prevent excessive motor wear
 
 #### Prerequisites
-* **Humidity Sensor:** A sensor entity with the `humidity` device class (e.g., an Inovelli switch, a dedicated Zigbee environment sensor, or a multi-sensor).
-* **Target Entity:** The fan or switch entity that controls the physical exhaust fan.
-
+* **Humidity Sensor:** Sensor entity with `humidity` device class
+* **Target Entity:** Fan or switch entity controlling the fan
 
 #### Configuration
-* **Activation Threshold:** The percentage (default 70%) at which the fan should start.
-* **Deactivation Threshold:** The percentage (default 60%) at which the fan should stop.
-* **Safety Timeout:** The maximum duration in minutes (default 30) the fan is allowed to run before being forced off.
+* **Activation Threshold:** Humidity percentage to start the fan (default 70%)
+* **Deactivation Threshold:** Humidity percentage to stop the fan (default 60%)
+* **Maximum Runtime:** Maximum continuous run-time in minutes (default 30)
 
-
-#### Setup Example (Guest Bathroom)
-1. **Sensor:** `sensor.guest_bath_switch_humidity`
-2. **Fan:** `switch.guest_bath_fan`
+#### Setup Example (Pink Bathroom)
+1. **Sensor:** `sensor.pink_bathroom_fan_wall_switch_humidity`
+2. **Fan:** `fan.pink_bathroom_exhaust_fan`
 3. **Configuration:**
     * **Activation Threshold:** 65%
     * **Deactivation Threshold:** 55%
-    * **Safety Timeout:** 15 Minutes
+    * **Maximum Runtime:** 15 Minutes
+4. **Name your automation:** `Pink Bathroom: Humidity Fan Control`
 
 
 ---
 
 ## Script Blueprints
 
-### Disco Lighting Mode (`random_color_bop.yaml`)
+### Logic: Random Color Bop (`random_color_bop.yaml`)
 
 [![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Flogic%2Frandom_color_bop.yaml)
 
-Rapidly cycles every light in selected areas to a unique, 100% saturated random color. Includes high-performance hybrid logic for mixed lighting environments.
+Rapidly cycles lights to random colors by updating a configurable subset per iteration, creating organic multi-color party effects.
 
-#### Operation
-* **Deep Expansion:** Recursively flattens "Groups of Groups" into individual bulb commands.
-* **Bop Logic:** Only updates a randomized subset of lights per cycle for organic, multi-color chaos.
-* **Hybrid Support:** Auto-detects `hs`, `rgb`, and `xy` capabilities.
-* **Strobe Mode:** White-only lights randomly flash between 0% and target brightness.
-* **Optimization:** Performs capability checks once upon execution to minimize network and CPU overhead.
+#### How It Works
+* **Deep Expansion:** Recursively flattens nested groups into individual bulb commands
+* **Subset Updates:** Only updates a randomized subset of lights per cycle for organic, multi-color effects
+* **Hybrid Support:** Auto-detects `hs`, `rgb`, and `xy` color capabilities
+* **Strobe Mode:** White-only lights randomly flash between 0% and target brightness
+* **Performance:** Capability checks run once at execution to minimize overhead
 
 #### Prerequisites
-* **Hue Hub (Recommended):** This script sends frequent local API calls.
+* **Hue Hub (Recommended):** Script sends frequent local API calls
 
 #### Configuration
-* **Brightness:** Global brightness level for the disco (default 100%).
-* **Bop Count:** Number of individual bulbs to change per cycle (default 3).
-* **Transition Speed:** Fade duration between colors (default 0.3s).
-* **Refresh Rate:** Delay before the next color shift (default 0.8s).
+* **Brightness:** Global brightness level (default 100%)
+* **Bop Count:** Number of individual bulbs to update per cycle (default 3)
+* **Transition Speed:** Fade duration between colors (default 0.3s)
+* **Refresh Rate:** Delay between color shifts (default 0.8s)
+
+#### Setup Example (Family Room)
+1. **Areas:** Select areas to include (e.g., `area.family_room`)
+2. **Configuration:**
+    * **Brightness:** 100%
+    * **Bop Count:** 3
+    * **Transition Speed:** 0.3s
+    * **Refresh Rate:** 0.8s
+3. **Name your script:** `Family Room: Random Color Bop`

@@ -1,6 +1,6 @@
 blueprint:
-  name: "Logic: Humidity Fan Control with Safety Timer"
-  description: "Turns on a fan when humidity rises and off when it drops. Includes a timeout."
+  name: "Logic: Humidity Fan Control"
+  description: "Automate fans based on humidity levels using dual thresholds and a timeout."
   domain: automation
   input:
     humidity_sensor:
@@ -25,7 +25,7 @@ blueprint:
       selector:
         number: { min: 0, max: 100, unit_of_measurement: "%" }
     max_run_time:
-      name: Safety Timeout (Minutes)
+      name: Maximum Runtime (Minutes)
       default: 30
       selector:
         number: { min: 1, max: 120, unit_of_measurement: "min" }
