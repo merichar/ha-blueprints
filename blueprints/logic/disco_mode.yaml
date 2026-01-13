@@ -40,7 +40,7 @@ sequence:
         {% elif targets.entity_id is list %}
           {% set entities = entities + targets.entity_id %}
         {% endif %}
-        {{ entities | select('match', 'light.') | list | unique }}
+        {{ entities | select('match', 'light.') | unique | list }}
       color_lights: >
         {{ all_entities | select('is_state_attr', 'supported_color_modes', 'hs') | list }}
       strobe_lights: >
