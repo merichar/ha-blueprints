@@ -12,6 +12,9 @@ To use these blueprints in your Home Assistant instance, click the buttons below
 ### Logic: Humidity-Controlled Fan
 [![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Flogic%2Fhumidity_fan_control.yaml)
 
+### Logic: Disco Lighting Mode
+[![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Flogic%2Fdisco_mode.yaml)
+
 ### Manual Installation ###
 
 1. **Copy the File:** Copy the URL of the raw .yaml file you want to use from this repository.
@@ -22,7 +25,7 @@ To use these blueprints in your Home Assistant instance, click the buttons below
 ## Structure Overview
 
 * **inovelli:** Manufacturer-specific blueprints for Inovelli Blue Series switches.
-* **logic:** Hardware-agnostic logic blueprints (e.g., climate, humidity control).
+* **logic:** Hardware-agnostic logic blueprints and reusable scripts (e.g., climate, disco effects).
 * **philips-hue:** (Planned) Battery-powered remote controllers.
 
 ## The Area-Aware Pattern
@@ -44,4 +47,5 @@ Each room requires an input_select (Dropdown) helper.
 These blueprints include built-in logic to ensure devices remain predictable.
 * **State Reset:** For lighting, if the target entity is off, the next press starts at the first scene.
 * **Hysteresis & Safety:** For logic blueprints (like Humidity Control), triggers use defined offsets and safety timeouts to prevent equipment short-cycling or infinite run-times.
+* **Loop Prevention:** Advanced triggers include state-aware guards to prevent Zigbee broadcast loops on noisy switches.
 * This ensures synchronization with voice assistants and apps without requiring extra background automations.
