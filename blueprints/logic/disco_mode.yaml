@@ -45,6 +45,9 @@ sequence:
         {{ all_entities | select('is_state_attr', 'supported_color_modes', 'hs') | list }}
       strobe_lights: >
         {{ all_entities | reject('is_state_attr', 'supported_color_modes', 'hs') | list }}
+      brightness: !input brightness_level
+      delay_secs: !input delay_time
+      transition_secs: !input transition_time
 
   - repeat:
       while:
@@ -60,11 +63,11 @@ sequence:
               target:
                 entity_id: "{{ color_lights }}"
               data:
-                brightness_pct: !input brightness_level
+                brightness_pct: "{{ brightness }}"
                 hs_color:
                   - "{{ range(0, 360) | random }}"
                   - 100
-                transition: !input transition_time
+                transition: "{{ transition_secs }}"
         
         # Batch update all white/non-color lights to "strobe"
         - if:
@@ -75,9 +78,9 @@ sequence:
               target:
                 entity_id: "{{ strobe_lights }}"
               data:
-                brightness_pct: "{{ [0, brightness_level | int] | random }}"
+                brightness_pct: "{{ [0, brightness | int] | random }}"
                 transition: 0.1
         
         - delay:
-            seconds: !input delay_time
+            seconds: "{{ delay_secs }}"
 mode: restart
