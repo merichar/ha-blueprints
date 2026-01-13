@@ -24,9 +24,16 @@ blueprint:
       default: 0.8
       selector:
         number: { min: 0.1, max: 5, step: 0.1, unit_of_measurement: "s" }
+    bop_count:
+      name: Bop Count
+      description: Number of lights to change per cycle.
+      default: 3
+      selector:
+        number: { min: 1, max: 20 }
 
 sequence:
   - variables:
+      bop_num: !input bop_count
       brightness: !input brightness_level
       delay_secs: !input delay_time
       targets: !input target_areas
@@ -61,29 +68,32 @@ sequence:
         - condition: template
           value_template: "{{ true }}"
       sequence:
-        # Color Service: Sends HS commands which HA translates to XY for your BR30s
+        - variables:
+            # Randomly select a subset of color lights based on bop_count
+            bop_targets: >
+              {{ color_lights | shuffle | batch(bop_num | int) | first | list }}
+
         - if:
             - condition: template
-              value_template: "{{ color_lights | count > 0 }}"
+              value_template: "{{ bop_targets | count > 0 }}"
           then:
             - service: light.turn_on
               target:
-                entity_id: "{{ color_lights }}"
+                entity_id: "{{ bop_targets }}"
               data:
                 brightness_pct: "{{ brightness }}"
                 hs_color:
                   - "{{ range(0, 360) | random }}"
                   - 100
                 transition: "{{ transition_secs }}"
-        
-        # Strobe Service: Handles Tetris lamps and non-color entities
+
         - if:
             - condition: template
               value_template: "{{ strobe_lights | count > 0 }}"
           then:
             - service: light.turn_on
               target:
-                entity_id: "{{ strobe_lights }}"
+                entity_id: "{{ strobe_lights | shuffle | batch(bop_num | int) | first | list }}"
               data:
                 brightness_pct: "{{ [0, brightness | int] | random }}"
                 transition: 0.1
