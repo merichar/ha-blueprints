@@ -48,15 +48,17 @@ This blueprint automates an exhaust fan based on humidity levels. It uses a dual
 Rapidly cycles every light in selected areas to a unique, 100% saturated random color. Includes high-performance hybrid logic for mixed lighting environments.
 
 #### Operation
-* **Hybrid Support:** Automatically detects light capabilities.
-* **Color Lights:** Cycles through hypersaturated (100% vivid) random colors.
-* **White Lights:** Randomly flashes (strobes) between 0% and target brightness.
+* **Deep Expansion:** Recursively flattens "Groups of Groups" into individual bulb commands.
+* **Bop Logic:** Only updates a randomized subset of lights per cycle for organic, multi-color chaos.
+* **Hybrid Support:** Auto-detects `hs`, `rgb`, and `xy` capabilities.
+* **Strobe Mode:** White-only lights randomly flash between 0% and target brightness.
 * **Optimization:** Performs capability checks once upon execution to minimize network and CPU overhead.
 
 #### Prerequisites
-* **Hue Hub (Highly Recommended):** This script sends frequent local API calls.
+* **Hue Hub (Recommended):** This script sends frequent local API calls.
 
 #### Configuration
 * **Brightness:** Global brightness level for the disco (default 100%).
+* **Bop Count:** Number of individual bulbs to change per cycle (default 3).
 * **Transition Speed:** Fade duration between colors (default 0.3s).
 * **Refresh Rate:** Delay before the next color shift (default 0.8s).

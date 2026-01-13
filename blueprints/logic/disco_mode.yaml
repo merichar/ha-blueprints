@@ -38,19 +38,21 @@ sequence:
       delay_secs: !input delay_time
       targets: !input target_areas
       transition_secs: !input transition_time
+
+      # Expand handles infinite nesting and areas automatically
       all_entities: >
-        {% set entities = area_entities(targets.area_id) if targets.area_id is string else [] %}
-        {% if targets.area_id is list %}
-          {% for area in targets.area_id %}
-            {% set entities = entities + area_entities(area) %}
-          {% endfor %}
-        {% endif %}
-        {% if targets.entity_id is string %}
-          {% set entities = entities + [targets.entity_id] %}
-        {% elif targets.entity_id is list %}
-          {% set entities = entities + targets.entity_id %}
-        {% endif %}
-        {{ entities | select('match', 'light.') | unique | list }}
+        {% set ns = namespace(raw=[]) %}
+        {# Collect IDs from selected areas #}
+        {% set areas = targets.area_id if targets.area_id is list else ([targets.area_id] if targets.area_id is string else []) %}
+        {% for a in areas %}
+          {% set ns.raw = ns.raw + area_entities(a) %}
+        {% endfor %}
+        {# Collect IDs from selected entities #}
+        {% set entities = targets.entity_id if targets.entity_id is list else ([targets.entity_id] if targets.entity_id is string else []) %}
+        {% set ns.raw = ns.raw + entities %}
+        {# The 'expand' filter flattens all nested groups into individual entities #}
+        {{ expand(ns.raw) | map(attribute='entity_id') | select('match', 'light.') | unique | list }}
+
       color_lights: >
         {% set filtered = namespace(entities=[]) %}
         {% for entity in all_entities %}
@@ -69,7 +71,7 @@ sequence:
           value_template: "{{ true }}"
       sequence:
         - variables:
-            # Randomly select a subset of color lights based on bop_count
+            # Picks individual bulb IDs from the flattened, recursively expanded list
             bop_targets: >
               {{ color_lights | shuffle | batch(bop_num | int) | first | list }}
 
