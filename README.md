@@ -2,13 +2,13 @@
 
 ## Available Blueprints
 
-### [Logic Blueprints](logic/README.md)
+### [Logic Blueprints](blueprints/logic/README.md)
 Hardware-agnostic automation blueprints that work with any compatible device.
 
 - **Humidity Fan Control** - Automate fans based on humidity with dual thresholds and a timeout
 - **Random Color Bop** - Random color cycling that updates a subset of lights per iteration for party effects
 
-### [Inovelli Blue Series](inovelli/blue-series/README.md)
+### [Inovelli Blue Series](blueprints/inovelli/blue-series/README.md)
 Blueprints for Inovelli Blue Series switches (VZM30-SN, VZM31-SN, VZM35-SN) using the ZHA integration.
 
 - **Scene Control** - Unified interface for cycling scenes and managing dimming with smart bulbs
@@ -67,3 +67,6 @@ Scenes use an area prefix for area-aware automation:
 scene.[area]_[scene_name]
 ```
 **Examples:** `scene.living_room_bright`, `scene.living_room_movie`
+
+### Helpers
+Some blueprints require Home Assistant helpers for state management. See the [Helpers Guide](helpers/README.md) for setup instructions.
