@@ -13,8 +13,10 @@ Blueprints for Inovelli Blue Series switches (VZM30-SN, VZM31-SN, VZM35-SN) usin
 
 - **Scene Control** - Unified interface for cycling scenes and managing dimming with smart bulbs
 
-### Philips Hue (Planned)
-Battery-powered remote controllers.
+### [Philips Hue](blueprints/philips-hue/README.md)
+Blueprints for Philips Hue remote controllers using the ZHA integration.
+
+- **Dimmer Scene Control** - Scene cycling and dimming control for Hue Dimmer Switch
 
 ---
 
@@ -41,6 +43,7 @@ All blueprints follow a consistent naming pattern:
 **Categories:**
 - **Logic:** Hardware-agnostic automation blueprints
 - **Inovelli Blue:** Inovelli-specific hardware blueprints
+- **Philips Hue:** Philips Hue-specific hardware blueprints
 - *Additional hardware categories as needed*
 
 **Components:**
@@ -53,6 +56,7 @@ All blueprints follow a consistent naming pattern:
 **Examples:**
 - `Logic: Humidity Fan Control` - Humidity (trigger) controls Fan
 - `Inovelli Blue: Scene Control` - Button press (implicit) controls Scenes
+- `Philips Hue: Dimmer Scene Control` - Button press (implicit) controls Scenes
 
 ### Automation Instance Naming
 Automation instances mirror the blueprint structure with a location prefix: `[Location]: [Input/Trigger] [Thing] Control`
@@ -60,6 +64,11 @@ Automation instances mirror the blueprint structure with a location prefix: `[Lo
 **Examples:**
 - `Main Ensuite: Humidity Fan Control`
 - `Living Room: Wall Switch Scene Control`
+- `Main Bedroom: Remote Scene Control`
+
+**For multiple remotes in the same room:** Include the remote's home location:
+- `Main Bedroom: Alice Nightstand Remote Scene Control`
+- `Main Bedroom: Bob Nightstand Remote Scene Control`
 
 ### Scene Naming
 Scenes use an area prefix for area-aware automation:
