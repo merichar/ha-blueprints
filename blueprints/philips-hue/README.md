@@ -2,9 +2,9 @@
 
 Blueprints for Philips Hue remote controllers using the ZHA integration.
 
-## Philips Hue Dimmer: Scene Control (`philips_hue_dimmer_scene_control.yaml`)
+## Philips Hue Dimmer: Control Scene (`philips_hue_dimmer_control_scene.yaml`)
 
-[![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Fphilips-hue%2Fphilips_hue_dimmer_scene_control.yaml)
+[![Open your Home Assistant instance and show the blueprint import dialog.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fmerichar%2Fha-blueprints%2Fmain%2Fblueprints%2Fphilips-hue%2Fphilips_hue_dimmer_control_scene.yaml)
 
 This blueprint provides a unified interface for cycling scenes and managing dimming levels using the Hue Dimmer Switch. It treats the remote as a controller for smart bulbs or smart fans. Includes self-contained reset logic based on light state and inactivity.
 
@@ -42,4 +42,4 @@ After the configured Reset Timeout period of no button presses, the next press r
     * Area Prefix: `living_room`
     * Target Entity: `area.living_room`
     * Scene Helper: `input_select.living_room_scene_tracker`
-4. Name your automation: `Living Room: Remote Scene Control`
+4. Name your automation: `Living Room Remote: Control Scene`

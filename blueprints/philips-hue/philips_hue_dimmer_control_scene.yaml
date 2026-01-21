@@ -1,15 +1,15 @@
 blueprint:
-  name: "Inovelli Blue: Scene Control"
+  name: "Philips Hue Dimmer: Control Scene"
   description: "Scene cycling and dimming control with automatic state-based reset."
   domain: automation
   input:
-    switch_device:
-      name: Inovelli Switch
+    remote_device:
+      name: Hue Dimmer Remote
       selector:
         device:
           filter:
             - integration: zha
-            - manufacturer: Inovelli
+            - manufacturer: Philips
     target_entity:
       name: Target Entity
       description: The light group or fan to control.
@@ -39,7 +39,7 @@ trigger:
   - platform: event
     event_type: zha_event
     event_data:
-      device_id: !input switch_device
+      device_id: !input remote_device
 
 action:
   - variables:
@@ -49,10 +49,10 @@ action:
       timeout_seconds: !input reset_timeout
 
   - choose:
-      # UP BUTTON: PRESS
+      # ON BUTTON: PRESS
       - conditions:
           - condition: template
-            value_template: "{{ trigger.event.data.command == 'button_2_press' }}"
+            value_template: "{{ trigger.event.data.command == 'on_press' }}"
         sequence:
           - choose:
             - conditions:
@@ -82,7 +82,7 @@ action:
       # UP BUTTON: HOLD
       - conditions:
           - condition: template
-            value_template: "{{ trigger.event.data.command == 'button_2_hold' }}"
+            value_template: "{{ trigger.event.data.command == 'up_hold' }}"
         sequence:
           - repeat:
               while:
@@ -97,17 +97,17 @@ action:
                     - platform: event
                       event_type: zha_event
                       event_data:
-                        device_id: !input switch_device
-                        command: button_2_release
+                        device_id: !input remote_device
+                        command: up_release
                   timeout:
                     seconds: 1
                 - condition: template
                   value_template: "{{ wait.trigger == none }}"
 
-      # DOWN BUTTON: PRESS
+      # OFF BUTTON: PRESS
       - conditions:
           - condition: template
-            value_template: "{{ trigger.event.data.command in ['button_1_press', 'off'] }}"
+            value_template: "{{ trigger.event.data.command == 'off_press' }}"
         sequence:
           # PREVENT LOOP: Only fire off command if target is not already off
           - condition: template
@@ -120,7 +120,7 @@ action:
       # DOWN BUTTON: HOLD
       - conditions:
           - condition: template
-            value_template: "{{ trigger.event.data.command == 'button_1_hold' }}"
+            value_template: "{{ trigger.event.data.command == 'down_hold' }}"
         sequence:
           - repeat:
               while:
@@ -135,8 +135,8 @@ action:
                     - platform: event
                       event_type: zha_event
                       event_data:
-                        device_id: !input switch_device
-                        command: button_1_release
+                        device_id: !input remote_device
+                        command: down_release
                   timeout:
                     seconds: 1
                 - condition: template

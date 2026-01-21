@@ -1,5 +1,5 @@
 blueprint:
-  name: "Logic: Random Color Bop"
+  name: "Random Color Bop"
   description: "Rapidly cycle random colors by updating a subset of lights per iteration. Creates organic multi-color party lighting effects."
   domain: script
   input:

@@ -6,6 +6,10 @@
 Hardware-agnostic automation blueprints that work with any compatible device.
 
 - **Humidity Fan Control** - Automate fans based on humidity with dual thresholds and a timeout
+
+### [Script Blueprints](blueprints/script/README.md)
+Blueprints for Scripts.
+
 - **Random Color Bop** - Random color cycling that updates a subset of lights per iteration for party effects
 
 ### [Inovelli Blue Series](blueprints/inovelli/blue-series/README.md)
@@ -38,10 +42,11 @@ Each blueprint's README includes an import badge. Click the category links above
 ### Blueprint Naming
 All blueprints follow a consistent naming pattern:
 
-**`[Category]: [Optional Trigger] [Thing] Control`**
+**`[Category] [Optional Trigger]: Control [Thing]`**
 
 **Categories:**
 - **Logic:** Hardware-agnostic automation blueprints
+- **Script:** Script blueprints
 - **Inovelli Blue:** Inovelli-specific hardware blueprints
 - **Philips Hue:** Philips Hue-specific hardware blueprints
 - *Additional hardware categories as needed*
@@ -50,25 +55,25 @@ All blueprints follow a consistent naming pattern:
 - **Trigger** (optional): The input or condition that activates the control
   - Include for Logic blueprints when not obvious from context
   - Omit for hardware blueprints where implicit (e.g., button press)
+- **Control**: Default verb
 - **Thing**: The target device, system, or mode being controlled
-- **Control**: Standardized suffix
 
 **Examples:**
-- `Logic: Humidity Fan Control` - Humidity (trigger) controls Fan
-- `Inovelli Blue: Scene Control` - Button press (implicit) controls Scenes
-- `Philips Hue: Dimmer Scene Control` - Button press (implicit) controls Scenes
+- `Logic Humidity: Control Fan` - Humidity (trigger) controls Fan
+- `Inovelli Blue: Control Scene` - Button press (implicit) controls Scenes
+- `Philips Hue Dimmer: Control Scene` - Button press (implicit) controls Scenes
 
 ### Automation Instance Naming
-Automation instances mirror the blueprint structure with a location prefix: `[Location]: [Input/Trigger] [Thing] Control`
+Automation instances mirror the blueprint structure with a location prefix: `[Location] [Input/Trigger]: Control [Thing]`
 
 **Examples:**
-- `Main Ensuite: Humidity Fan Control`
-- `Living Room: Wall Switch Scene Control`
-- `Main Bedroom: Remote Scene Control`
+- `Main Ensuite Humidity: Control Fan`
+- `Living Room Wall Switch: Control Scene`
+- `Main Bedroom Remote: Control Scene`
 
 **For multiple remotes in the same room:** Include the remote's home location:
-- `Main Bedroom: Alice Nightstand Remote Scene Control`
-- `Main Bedroom: Bob Nightstand Remote Scene Control`
+- `Main Bedroom Alice Nightstand Remote: Control Scene`
+- `Main Bedroom Bob Nightstand Remote: Control Scene`
 
 ### Scene Naming
 Scenes use an area prefix for area-aware automation:
