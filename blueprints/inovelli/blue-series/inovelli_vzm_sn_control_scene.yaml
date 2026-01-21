@@ -28,7 +28,7 @@ blueprint:
     reset_timeout:
       name: Reset Timeout
       description: "Seconds of inactivity before the next press starts at the first scene."
-      default: 300
+      default: 5
       selector:
         number:
           min: 1
@@ -74,10 +74,6 @@ action:
           - service: scene.turn_on
             target:
               entity_id: "scene.{{ prefix }}_{{ states(helper) | lower | replace(' ', '_') }}"
-
-          # Anti-bounce to prevent double-skipping
-          - delay:
-              milliseconds: 400
 
       # UP BUTTON: HOLD
       - conditions:

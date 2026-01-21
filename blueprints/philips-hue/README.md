@@ -31,7 +31,7 @@ After the configured Reset Timeout period of no button presses, the next press r
 * **Entity Naming:** Scenes must follow the pattern `scene.[area_prefix]_[scene_name]`.
 
 ### Configuration
-* **Reset Timeout:** The number of seconds (default 300) the remote must be inactive before the next press returns to the first scene.
+* **Reset Timeout:** The number of seconds (default 5) the remote must be inactive before the next press returns to the first scene.
 * **Area Prefix:** The prefix used in your scene names (e.g., `living_room`).
 * **Scene Helper:** The input_select dropdown used to track the current scene.
 
