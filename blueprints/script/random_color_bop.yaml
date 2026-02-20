@@ -79,7 +79,7 @@ sequence:
             - condition: template
               value_template: "{{ bop_targets | count > 0 }}"
           then:
-            - service: light.turn_on
+            - action: light.turn_on
               target:
                 entity_id: "{{ bop_targets }}"
               data:
@@ -93,7 +93,7 @@ sequence:
             - condition: template
               value_template: "{{ strobe_lights | count > 0 }}"
           then:
-            - service: light.turn_on
+            - action: light.turn_on
               target:
                 entity_id: "{{ strobe_lights | shuffle | batch(bop_num | int) | first | list }}"
               data:
