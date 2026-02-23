@@ -84,3 +84,15 @@ scene.[area]_[scene_name]
 
 ### Helpers
 Some blueprints require Home Assistant helpers for state management. See the [Helpers Guide](helpers/README.md) for setup instructions.
+
+---
+
+## Development
+
+### Linting
+
+Configured via `.yamllint`. Run locally with:
+
+```bash
+uvx yamllint .
+```
