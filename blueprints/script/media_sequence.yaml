@@ -1,0 +1,54 @@
+blueprint:
+  name: "Media Sequence"
+  description: >
+    Sequential media playback for automations. Define any number of
+    arbitrarily-sourced tracks (e.g.: local files, radio stations, direct
+    streams) as a JSON list and run on any HA media player. The final track
+    plays until the script is stopped.
+  domain: script
+  input:
+    media_player:
+      name: Media Player
+      selector:
+        entity:
+          domain: media_player
+
+    tracks:
+      name: Tracks
+      description: >
+        JSON array of tracks. Each entry requires a "uri" field. Optional
+        fields: "type" (content type, default "audio/mpeg") and "duration"
+        (seconds before advancing to the next track; omit or set 0 on the
+        final track because it plays until the script is stopped externally).
+      selector:
+        text:
+          multiline: true
+
+sequence:
+  - variables:
+      player: !input media_player
+      tracks: !input tracks
+
+  - repeat:
+      for_each: "{{ tracks | from_json }}"
+      sequence:
+        - action: media_player.play_media
+          target:
+            entity_id: "{{ player }}"
+          data:
+            media_content_id: "{{ repeat.item.uri }}"
+            media_content_type: "{{ repeat.item.type | default('audio/mpeg') }}"
+
+        - if:
+            - condition: template
+              value_template: >
+                {{ not repeat.last and repeat.item.duration | default(0) | int > 0 }}
+          then:
+            - delay:
+                seconds: "{{ repeat.item.duration | int }}"
+
+  # Keep the script alive on the final track until stopped externally
+  - delay:
+      hours: 24
+
+mode: restart
