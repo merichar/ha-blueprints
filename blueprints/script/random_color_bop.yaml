@@ -99,7 +99,7 @@ sequence:
               data:
                 brightness_pct: "{{ [0, brightness | int] | random }}"
                 transition: 0.1
-        
+
         - delay:
             seconds: "{{ delay_secs }}"
 mode: restart
