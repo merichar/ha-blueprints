@@ -11,6 +11,7 @@ Hardware-agnostic automation blueprints that work with any compatible device.
 Blueprints for Scripts.
 
 - **Random Color Bop** - Random color cycling that updates a subset of lights per iteration for party effects
+- **Media Sequence** - Sequential mixed-media playback from a JSON track list on any HA media player
 
 ### [Inovelli Blue Series](blueprints/inovelli/blue-series/README.md)
 Blueprints for Inovelli Blue Series switches (VZM30-SN, VZM31-SN, VZM35-SN) using the ZHA integration.
