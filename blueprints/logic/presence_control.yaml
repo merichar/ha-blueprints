@@ -1,0 +1,61 @@
+blueprint:
+  name: "Logic Presence: Control"
+  description: >
+    Presence-driven automation with configurable occupied and vacated actions.
+    Any new presence event while the vacated timer is running resets the countdown.
+  domain: automation
+  input:
+    presence_sensor:
+      name: Presence Sensor
+      description: A binary sensor that is 'on' when the space is occupied.
+      selector:
+        entity:
+          domain: binary_sensor
+    on_occupied:
+      name: On Occupied
+      description: Actions to run when presence is detected.
+      default: []
+      selector:
+        action: {}
+    vacated_timeout:
+      name: Vacated Timeout
+      description: Seconds to wait after presence clears before running vacated actions.
+      default: 900
+      selector:
+        number: { min: 1, max: 3600, unit_of_measurement: seconds }
+    on_vacated:
+      name: On Vacated
+      description: Actions to run after the vacated timeout elapses.
+      default: []
+      selector:
+        action: {}
+
+trigger:
+  - platform: state
+    entity_id: !input presence_sensor
+    to: "on"
+    id: occupied
+  - platform: state
+    entity_id: !input presence_sensor
+    to: "off"
+    id: vacated
+
+action:
+  - variables:
+      timeout_seconds: !input vacated_timeout
+
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: occupied
+        sequence: !input on_occupied
+
+      - conditions:
+          - condition: trigger
+            id: vacated
+        sequence:
+          - delay:
+              seconds: "{{ timeout_seconds }}"
+          - sequence: !input on_vacated
+
+mode: restart

@@ -6,6 +6,7 @@
 Hardware-agnostic automation blueprints that work with any compatible device.
 
 - **Humidity Fan Control** - Automate fans based on humidity with dual thresholds and a timeout
+- **Presence Control** - Presence-driven automation with configurable occupied/vacated actions and a resettable vacated timer
 
 ### [Script Blueprints](blueprints/script/README.md)
 Blueprints for Scripts.
