@@ -23,6 +23,11 @@ Blueprints for Philips Hue remote controllers using the ZHA integration.
 
 - **Dimmer Scene Control** - Scene cycling and dimming control for Hue Dimmer Switch
 
+### [Lutron Aurora](blueprints/lutron/aurora/README.md)
+Blueprints for the Lutron Aurora smart bulb dimmer (Z3-1BRL) using the ZHA integration.
+
+- **Scene Control** - Scene cycling and direct brightness control via the Aurora knob
+
 ---
 
 ## Installation
