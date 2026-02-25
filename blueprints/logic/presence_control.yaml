@@ -59,6 +59,9 @@ action:
         sequence:
           - delay:
               seconds: "{{ timeout_seconds }}"
-          - sequence: !input on_vacated
+          - if:
+              - condition: template
+                value_template: "{{ true }}"
+            then: !input on_vacated
 
 mode: restart
