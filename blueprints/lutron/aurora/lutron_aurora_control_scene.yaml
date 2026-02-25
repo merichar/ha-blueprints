@@ -14,7 +14,7 @@ blueprint:
       name: Target Entity
       description: The light group or fan to control.
       selector:
-        target: {}
+        target:
     scene_helper:
       name: Scene Tracker Helper
       description: The Dropdown (input_select) for this room's scenes.
@@ -30,7 +30,10 @@ blueprint:
       description: "Seconds of inactivity before the next press starts at the first scene."
       default: 5
       selector:
-        number: { min: 1, max: 3600, unit_of_measurement: seconds }
+        number:
+          min: 1
+          max: 3600
+          unit_of_measurement: seconds
 
 trigger:
   - platform: event

@@ -14,7 +14,7 @@ blueprint:
       name: Target Entity
       description: The light group or fan to control.
       selector:
-        target: {}
+        target:
     scene_helper:
       name: Scene Tracker Helper
       description: The Dropdown (input_select) for this room's scenes.

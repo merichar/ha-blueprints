@@ -18,17 +18,26 @@ blueprint:
       name: Activation Threshold
       default: 70
       selector:
-        number: { min: 0, max: 100, unit_of_measurement: "%" }
+        number:
+          min: 0
+          max: 100
+          unit_of_measurement: "%"
     falling_threshold:
       name: Deactivation Threshold
       default: 60
       selector:
-        number: { min: 0, max: 100, unit_of_measurement: "%" }
+        number:
+          min: 0
+          max: 100
+          unit_of_measurement: "%"
     max_run_time:
       name: Maximum Runtime (Minutes)
       default: 30
       selector:
-        number: { min: 1, max: 120, unit_of_measurement: "min" }
+        number:
+          min: 1
+          max: 120
+          unit_of_measurement: "min"
 
 trigger:
   - platform: numeric_state
