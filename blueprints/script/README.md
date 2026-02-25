@@ -62,9 +62,9 @@ Each track is an object with:
 **Supported content types:** `audio/mpeg`, `audio/aac`, `audio/ogg`, `audio/flac`, `audio/x-wav`, `music`
 
 **URI formats by source:**
-* Local file: `media-source://media_source/local/filename.mp3`
-* Radio browser: `media-source://radio_browser/<station-uuid>`
-* Direct stream: `http://stream.example.com/radio.aac`
+* Local file: `media-source://media_source/local/FILENAME.MP3`
+* Radio browser: `media-source://radio_browser/STATION_UUID`
+* Direct stream: `http://stream.example.com/FILENAME.AAC`
 
 > **Note for ESPHome / I2S players:** Use direct HTTP URLs; ESPHome cannot resolve `media-source://` paths. All other player types (Chromecast, Apple TV, etc.) support `media-source://` natively.
 
