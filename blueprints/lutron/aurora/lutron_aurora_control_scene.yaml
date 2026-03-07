@@ -51,7 +51,7 @@ action:
       level: "{{ trigger.event.data.params.level | int }}"
 
   - choose:
-      # KNOB BUTTON: PRESS (on)
+      # Knob button: press (on)
       - conditions:
           - condition: template
             value_template: "{{ level == 255 }}"
@@ -77,7 +77,7 @@ action:
             target:
               entity_id: "scene.{{ prefix }}_{{ states(helper) | lower | replace(' ', '_') }}"
 
-      # KNOB: ROTATE == 0
+      # Knob: rotate == 0
       - conditions:
           - condition: template
             value_template: "{{ level == 0 }}"
@@ -85,7 +85,7 @@ action:
           - action: light.turn_off
             target: !input target_entity
 
-      # KNOB: ROTATE > 0
+      # Knob: rotate > 0
       - conditions:
           - condition: template
             value_template: "{{ level > 0 and level < 255 }}"

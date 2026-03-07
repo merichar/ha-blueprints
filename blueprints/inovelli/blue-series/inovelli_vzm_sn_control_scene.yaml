@@ -49,7 +49,7 @@ action:
       timeout_seconds: !input reset_timeout
 
   - choose:
-      # UP BUTTON: PRESS
+      # Up button: press
       - conditions:
           - condition: template
             value_template: "{{ trigger.event.data.command == 'button_2_press' }}"
@@ -75,7 +75,7 @@ action:
             target:
               entity_id: "scene.{{ prefix }}_{{ states(helper) | lower | replace(' ', '_') }}"
 
-      # UP BUTTON: HOLD
+      # Up button: hold
       - conditions:
           - condition: template
             value_template: "{{ trigger.event.data.command == 'button_2_hold' }}"
@@ -100,12 +100,12 @@ action:
                 - condition: template
                   value_template: "{{ wait.trigger == none }}"
 
-      # DOWN BUTTON: PRESS
+      # Down button: press
       - conditions:
           - condition: template
             value_template: "{{ trigger.event.data.command in ['button_1_press', 'off'] }}"
         sequence:
-          # PREVENT LOOP: Only fire off command if target is not already off
+          # Prevent loop: only fire off command if target is not already off
           - condition: template
             value_template: >
               {% set ent_id = target.entity_id if target.entity_id is string else target.entity_id[0] %}
@@ -113,7 +113,7 @@ action:
           - action: light.turn_off
             target: !input target_entity
 
-      # DOWN BUTTON: HOLD
+      # Down button: hold
       - conditions:
           - condition: template
             value_template: "{{ trigger.event.data.command == 'button_1_hold' }}"

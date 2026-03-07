@@ -5,17 +5,20 @@ blueprint:
   input:
     humidity_sensor:
       name: Humidity Sensor
+      description: The humidity sensor to monitor.
       selector:
         entity:
           domain: sensor
           device_class: humidity
     target_fan:
       name: Exhaust Fan
+      description: The fan or switch to activate when humidity rises.
       selector:
         entity:
           domain: [switch, fan]
     rising_threshold:
       name: Activation Threshold
+      description: Humidity percentage that turns the fan on.
       default: 70
       selector:
         number:
@@ -24,6 +27,7 @@ blueprint:
           unit_of_measurement: "%"
     falling_threshold:
       name: Deactivation Threshold
+      description: Humidity percentage that turns the fan off.
       default: 60
       selector:
         number:
@@ -32,6 +36,7 @@ blueprint:
           unit_of_measurement: "%"
     max_run_time:
       name: Maximum Runtime (Minutes)
+      description: Turns the fan off after this many minutes regardless of humidity.
       default: 30
       selector:
         number:
