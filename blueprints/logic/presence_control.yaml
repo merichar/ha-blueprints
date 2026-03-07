@@ -1,8 +1,10 @@
 blueprint:
   name: "Logic Presence: Control"
   description: >
-    Presence-driven automation with configurable occupied and vacated actions.
-    Any new presence event while the vacated timer is running resets the countdown.
+    Presence-driven automation using a motion sensor and a boolean entity
+    to track occupancy state. Manages the boolean on/off with a configurable
+    vacated timeout and reoccupancy delay. Optional action lists run when
+    the space becomes occupied or vacated.
   domain: automation
   input:
     presence_sensor:
@@ -11,24 +13,59 @@ blueprint:
       selector:
         entity:
           domain: binary_sensor
-    on_occupied:
-      name: On Occupied
-      description: Actions to run when presence is detected.
-      default: []
+    presence_boolean:
+      name: Presence Boolean
+      description: >
+        A switch, light, or input_boolean that tracks occupancy state. The
+        blueprint turns this on when occupied and off when vacated. Use a
+        physical switch or light to directly control a device, or an
+        input_boolean as a virtual indicator.
       selector:
-        action:
+        entity:
+          domain:
+            - input_boolean
+            - switch
+            - light
+    reoccupancy_delay:
+      name: Reoccupancy Delay
+      description: >
+        Seconds to suppress re-triggering after the boolean is turned off.
+        Prevents the automation from re-activating while the occupant is
+        leaving, and prevents re-activation if the sensor briefly clears
+        while the space is still occupied.
+      default: 10
+      selector:
+        number:
+          min: 0
+          max: 300
+          unit_of_measurement: seconds
     vacated_timeout:
       name: Vacated Timeout
-      description: Seconds to wait after presence clears before running vacated actions.
+      description: >
+        Seconds to wait after presence clears before turning off the boolean
+        and running vacated actions.
       default: 900
       selector:
         number:
           min: 1
           max: 3600
           unit_of_measurement: seconds
+    on_occupied:
+      name: Actions When Occupied
+      description: >
+        Actions to run when the space becomes occupied.
+
+        _Optional:_ leave empty if the boolean turning on is sufficient
+        (e.g., a physical switch controlling lights directly).
+      default: []
+      selector:
+        action:
     on_vacated:
-      name: On Vacated
-      description: Actions to run after the vacated timeout elapses.
+      name: Actions When Vacated
+      description: >
+        Actions to run when the space is vacated.
+
+        _Optional:_ leave empty if the boolean turning off is sufficient.
       default: []
       selector:
         action:
@@ -37,31 +74,59 @@ trigger:
   - platform: state
     entity_id: !input presence_sensor
     to: "on"
-    id: occupied
+    id: "occupied"
   - platform: state
     entity_id: !input presence_sensor
     to: "off"
-    id: vacated
+    id: "vacated"
 
 action:
   - variables:
+      boolean_entity: !input presence_boolean
       timeout_seconds: !input vacated_timeout
+      reoccupancy_delay_seconds: !input reoccupancy_delay
+      seconds_since_off: >-
+        {{ (now() - states[boolean_entity].last_changed).total_seconds()
+           if is_state(boolean_entity, 'off') else 999 }}
 
   - choose:
+      # Occupied: turn on boolean and run actions if exit delay has elapsed
       - conditions:
           - condition: trigger
-            id: occupied
-        sequence: !input on_occupied
+            id: "occupied"
+          - condition: template
+            value_template: >-
+              {{ is_state(boolean_entity, 'off')
+                 and (reoccupancy_delay_seconds == 0
+                      or seconds_since_off >= reoccupancy_delay_seconds) }}
+        sequence:
+          - action: homeassistant.turn_on
+            target:
+              entity_id: !input presence_boolean
+          - if:
+              - condition: template
+                value_template: "{{ true }}"
+            then: !input on_occupied
 
+      # Vacated: wait timeout, then turn off boolean and run actions
       - conditions:
           - condition: trigger
-            id: vacated
+            id: "vacated"
+          - condition: template
+            value_template: "{{ is_state(boolean_entity, 'on') }}"
         sequence:
           - delay:
               seconds: "{{ timeout_seconds }}"
           - if:
               - condition: template
-                value_template: "{{ true }}"
-            then: !input on_vacated
+                value_template: "{{ is_state(boolean_entity, 'on') }}"
+            then:
+              - action: homeassistant.turn_off
+                target:
+                  entity_id: !input presence_boolean
+              - if:
+                  - condition: template
+                    value_template: "{{ true }}"
+                then: !input on_vacated
 
 mode: restart
